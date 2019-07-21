@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+static bool KEYS[322];
+
 enum MouseB
 {
 	mLeft,
@@ -18,5 +20,6 @@ public:
 
 
 	void Update();
+	void handleInput();
 };
 

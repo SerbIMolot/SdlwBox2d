@@ -6,7 +6,11 @@ SDL_Renderer* SDL_wrapper::gRenderer = nullptr;
 
 SDL_DisplayMode SDL_wrapper::displayMode;
 
+std::shared_ptr< EventHandle > SDL_wrapper::eventHandler = std::make_shared< EventHandle >();
+
 b2World* SDL_wrapper::world = new b2World( b2Vec2( 0.0f, 10.0f ) );
+
+std::unique_ptr< BodyManager > SDL_wrapper::bodyManager = std::make_unique< BodyManager >();
 
 
 SDL_wrapper::SDL_wrapper()
@@ -26,6 +30,52 @@ std::vector< std::shared_ptr< Body > > SDL_wrapper::GameBodys;
 void SDL_wrapper::onMouseButtonEvent(int x, int y, bool isReleased, int button)
 {
 
+	if ( isReleased == false && button == SDL_BUTTON_LEFT )
+	{
+		SDL_Log("LMB PRESS\n");
+		dybox->applyForce( b2Vec2( 100.0f, 0.0f ) );
+	}
+
+}
+
+void SDL_wrapper::onKeyPress( SDL_Scancode key )
+{
+	//if ( key == SDL_SCANCODE_LEFT  )
+	//{
+	//	SDL_Log("Left arrow press \n");
+	//	pl->move( b2Vec2( 0, 1 ) );		
+	//}
+	/*if ( key[ SDL_SCANCODE_LEFT ] )
+	{
+		SDL_Log("Left arrow press \n");
+		pl->move( b2Vec2( 0, 1 ) );
+	}
+	if ( key[ SDL_SCANCODE_RIGHT ] )
+	{
+		SDL_Log("Right arrow press \n");
+		pl->move( b2Vec2( 0, -1 ) );
+
+	}
+	if ( key[ SDL_SCANCODE_SPACE ] )
+	{
+		SDL_Log("SPACE pressed\n");
+		pl->jump();
+	}*/
+}
+
+void SDL_wrapper::onKeyRelease( SDL_Scancode key )
+{
+	//if ( key == SDL_SCANCODE_LEFT )
+	//{
+	//	SDL_Log("Left arrow release \n");
+	//	pl->move( b2Vec2_zero );
+	//}
+	//if ( key == SDL_SCANCODE_RIGHT )
+	//{
+	//	SDL_Log("Right arrow release \n");
+	//	pl->move( b2Vec2_zero );
+	//
+	//}
 
 }
 
@@ -45,9 +95,15 @@ void SDL_wrapper::GameDraw()
 	SDL_RenderClear(SDL_wrapper::gRenderer);
 
 
-	box->Draw();
-	dybox->Draw();
-	dybox2->Draw();
+//	botbox->Draw();
+	//leftbox->Draw();
+	//topbox->Draw();
+	//rightbox->Draw();
+	//dybox->Draw();
+	//printf("BOXVEL = %f : %f\n", dybox->getVelocity().x, dybox->getVelocity().y );
+	//dybox2->Draw();
+	//pl->Draw();
+
 
 
 	SDL_RenderPresent(SDL_wrapper::gRenderer);
@@ -87,9 +143,24 @@ bool SDL_wrapper::GameInit()
 	SoundManager::Instance();
 	SoundManager::Instance()->loadSounds();
 
-	box = std::make_shared< Body >();
-	dybox = std::make_shared< dynBody >( 3.0f, 1.0f, TextureManager::getTexture("box.jpg"), 0.65f, 0.3f );
-	dybox2 = std::make_shared< dynBody >( 2.0f, 2.0f, TextureManager::getTexture("box.jpg"), 0.65f, 0.3f );
+	bodyManager->createBody( btWall, PixelToMeter( SCREEN_WIDTH / 2 ), PixelToMeter( SCREEN_HEIGHT - 10.0f ), TextureManager::getTexture( "HorizontalWall.png" ) );
+	bodyManager->createBody( btWall, PixelToMeter( 10.0f ), PixelToMeter( SCREEN_HEIGHT / 2 ), TextureManager::getTexture( "VerticalWall.png" ) );
+	bodyManager->createBody( btWall, PixelToMeter( SCREEN_WIDTH / 2 ), PixelToMeter( 10.0f ), TextureManager::getTexture("HorizontalWall.png") );
+	bodyManager->createBody( btWall, PixelToMeter( SCREEN_WIDTH ), PixelToMeter( SCREEN_HEIGHT / 2 ), TextureManager::getTexture("VerticalWall.png") );
+	//botbox = std::make_shared< Body >( PixelToMeter( SCREEN_WIDTH / 2 ), PixelToMeter( SCREEN_HEIGHT - 10.0f ), TextureManager::getTexture( "HorizontalWall.png" ) );
+	//leftbox= std::make_shared< Body >( PixelToMeter( 10.0f ), PixelToMeter( SCREEN_HEIGHT / 2 ), TextureManager::getTexture( "VerticalWall.png" ) );
+	//topbox= std::make_shared< Body >( PixelToMeter( SCREEN_WIDTH / 2 ), PixelToMeter( 10.0f ), TextureManager::getTexture("HorizontalWall.png") );
+	//rightbox= std::make_shared< Body >( PixelToMeter( SCREEN_WIDTH ), PixelToMeter( SCREEN_HEIGHT / 2 ), TextureManager::getTexture("VerticalWall.png") );
+	
+	bodyManager->createBody( btBox, 3.0f, 4.0f, TextureManager::getTexture("box.jpg") );
+	bodyManager->createBody( btBox, 2.0f, 6.0f, TextureManager::getTexture("box.jpg") );
+
+	bodyManager->createBody( btPlayer );
+
+	//dybox = std::make_shared< dynBody >( 3.0f, 4.0f, TextureManager::getTexture("box.jpg"), 0.65f, 0.3f );
+	//dybox2 = std::make_shared< dynBody >( 2.0f, 6.0f, TextureManager::getTexture("box.jpg"), 0.65f, 0.3f );
+	
+	//pl = std::make_shared< Player >();
 	//phObj = std::make_shared< phBody >( 10, 20, std::make_shared< b2Vec2 >( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 ), TextureManager::getTexture("Puck.png") );
 	//phObj1 = std::make_shared< phBody >( 10, 20, std::make_shared< b2Vec2 >( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 ), TextureManager::getTexture("Puck.png"));
 
@@ -99,7 +170,7 @@ bool SDL_wrapper::GameInit()
 
 void SDL_wrapper::GameTick()
 {
-
+	eventHandler->Update();
 	world->Step( timeStep, velocityIterations, positionIterations );
 
 }

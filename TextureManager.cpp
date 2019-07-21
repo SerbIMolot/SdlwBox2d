@@ -9,7 +9,13 @@ std::map<std::string, std::shared_ptr<Texture>> TextureManager::Textures;
 
 void TextureManager::loadTextures() {
 	addTexture("Data/box.jpg");
-	addTexture("Data/wall.png");
+	addTexture("Data/HorizontalWall.png");
+	addTexture("Data/VerticalWall.png");
+	addTexture("Data/playerStand.bmp");
+	addTexture("Data/playerHand.bmp");
+	addTexture("Data/plStand.png");
+
+	//Entity(3.0f, 1.0f, TextureManager::getTexture("box.jpg"), 0.65f, 0.3f);
 }
 
 

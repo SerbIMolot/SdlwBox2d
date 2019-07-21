@@ -2,14 +2,46 @@
 #include "Entity.h"
 
 
-Entity::Entity() : Object()
+Entity::Entity()
+	: dynBody()
 {
-	movable = true;
+
+}
+
+Entity::Entity( BodyType btype, b2Vec2 vec, std::shared_ptr<Texture> textr, float dencity, float friction )
+	: dynBody( btype, vec, textr, dencity, friction )
+{
+
+}
+
+Entity::Entity( BodyType btype, float x, float y, std::shared_ptr<Texture> textr, float dencity, float friction )
+	: dynBody( btype, x, y, textr, dencity, friction )
+{
+
 }
 
 
 Entity::~Entity()
 {
+}
+
+void Entity::moveTo( b2Vec2 pos )
+{
+	float speed = getVelocity().LengthSquared();
+	float maxSpeedsqrd = getMaxSpeed() * getMaxSpeed();
+	SDL_Log( "dist = %f\n", speed );
+	SDL_Log( "SqrtSpeed = %f\n", maxSpeedsqrd );
+	
+	if ( speed < maxSpeedsqrd )
+	{ 
+		SDL_Log( "Player accelerate\n" );
+		groundBody->ApplyLinearImpulse( b2Cross( pos, getMaxSpeed() ), groundBody->GetWorldCenter(), true );
+	}
+	else
+	{ 
+		SDL_Log( "Player max speed\n" );
+		groundBody->SetLinearVelocity( b2Cross( pos, getMaxSpeed() ) );
+	}
 }
 
 void Entity::setMoveBounds(b2Vec2 bounds)
@@ -19,41 +51,23 @@ void Entity::setMoveBounds(b2Vec2 bounds)
 
 void Entity::setMoveBounds(float x, float y)
 {
-	this->moveBounds = std::make_shared< b2Vec2 >( x, y );
+	this->moveBounds = b2Vec2( x, y );
 }
 
-void Entity::setVelocity(
-	
-	
-	
-	velocity)
-{
-	this->velocity = velocity;
-}
-
-void Entity::setVelocity(float x, float y)
-{
-	this->velocity = std::make_shared< b2Vec2 >( x, y );
-}
 
 b2Vec2 Entity::getMoveBounds()
 {
 	return moveBounds;
 }
 
-b2Vec2 Entity::getVelocity()
+float Entity::getMaxSpeed()
 {
-	return velocity;
+	return maxSpeed;
 }
 
-void Entity::move()
+void Entity::setMaxSpeed( float speed )
 {
+	maxSpeed = speed;
 }
 
-void Entity::Update(std::shared_ptr< Object > obj)
-{
-}
 
-void Entity::collisionDetected(std::shared_ptr< Object > obj)
-{
-}

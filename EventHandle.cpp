@@ -3,6 +3,8 @@
 
 EventHandle::EventHandle()
 {
+	memset( &KEYS, false, sizeof( bool ) * 322 );
+	
 }
 
 
@@ -41,38 +43,79 @@ void EventHandle::Update()
 		}
 
 		const Uint8* currentKeyState = SDL_GetKeyboardState(NULL);
-
+	//	SDL_Log("currentstate %d", currentKeyState);
 		if (currentKeyState[SDL_SCANCODE_LEFT])
 		{
-
+			
 		}
 
 		if (currentKeyState[SDL_SCANCODE_RIGHT])
 		{
 		}
-		switch (e.type) {
+		
+		if ( e.type == SDL_KEYDOWN && e.key.repeat == 0 ) 
+		{
 
-		case SDLK_UP:
+			KEYS[ e.key.keysym.scancode ] = true;
+			SDL_wrapper::Instance()->onKeyPress( e.key.keysym.scancode );
+		
+		}
+		if ( e.type == SDL_KEYUP && e.key.repeat == 0 ) 
+		{
 
+			KEYS[ e.key.keysym.scancode ] = false;
+			SDL_wrapper::Instance()->onKeyRelease( e.key.keysym.scancode );
 			break;
-
-		case SDLK_DOWN:
-
-			break;
-
-		case SDLK_LEFT:
-
-			break;
-
-		case SDLK_RIGHT:
-
-			break;
-
-		default:
-
-			break;
+		
 		}
 
+
+	}
+	handleInput();
+}
+
+void EventHandle::handleInput()
+{
+
+	if ( KEYS[ SDL_SCANCODE_LEFT ] )
+	{
+		BodyManager::Instance()->getPlayer()->move( b2Vec2( 0, 1 ) );
+	}
+	//if ( !KEYS[ SDL_SCANCODE_LEFT ] )
+	//{
+	//	SDL_wrapper::Instance()->pl->move( b2Vec2( 0, 1 ) );
+	//}
+	if ( KEYS[ SDL_SCANCODE_RIGHT ] )
+	{
+		BodyManager::Instance()->getPlayer()->move( b2Vec2( 0, -1 ) );
+	}
+	if ( KEYS[ SDL_SCANCODE_SPACE ] )
+	{
+		BodyManager::Instance()->getPlayer()->jump( );
 	}
 
+
+	/*
+	int a = SDL_SCANCODE_TO_KEYCODE(SDLK_LEFT);
+	SDL_Log(" SDLKLEFT %d", SDL_SCANCODE_TO_KEYCODE(SDLK_LEFT) );
+	SDL_Log(" SDLKLEFT %d", SDLK_LEFT );
+	SDL_Log(" SDLKLEFT %d", SDLK_SCANCODE_MASK | SDLK_LEFT );
+	if( KEYS[ SDL_SCANCODE_TO_KEYCODE( SDLK_LEFT ) ] == true )
+	{
+		SDL_wrapper::Instance()->pl->move( b2Vec2( 0, 1 ) );
+	}
+	if  (KEYS[ SDL_SCANCODE_TO_KEYCODE( SDLK_RIGHT ) ] == true)
+	{
+		SDL_wrapper::Instance()->pl->move( b2Vec2( 0, -1 ) );
+	}
+
+	if( KEYS[ SDL_SCANCODE_TO_KEYCODE( SDLK_LEFT ) ] == false )
+	{
+		SDL_wrapper::Instance()->pl->move( b2Vec2( 0, 1 ) );
+	}
+	if ( KEYS[ SDL_SCANCODE_TO_KEYCODE( SDLK_RIGHT ) ] == false )
+	{
+		SDL_wrapper::Instance()->pl->move( b2Vec2( 0, -1 ) );
+	}
+	*/
 }

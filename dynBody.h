@@ -7,10 +7,15 @@ class dynBody : public Body
 	b2Fixture* fixture;
 public:
 	dynBody();
-	dynBody( b2Vec2 vec, std::shared_ptr< Texture > textr, float dencity, float friction );
-	dynBody(float x, float y, std::shared_ptr<Texture> textr, float dencity, float friction);
+	dynBody( BodyType btype, b2Vec2 vec, std::shared_ptr< Texture > textr, float dencity, float friction );
+	dynBody( BodyType btype, float x, float y, std::shared_ptr<Texture> textr, float dencity, float friction );
 	~dynBody();
 
+	void applyForce( b2Vec2 force );
+
+	b2Vec2 getVelocity();
+
+	friend class Entity;
 	
 };
 

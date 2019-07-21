@@ -1,21 +1,4 @@
 ﻿  stdafx.cpp
-  TriggersManager.cpp
-  Trigger.cpp
-c:\users\user\source\repos\sdlwbox2d\trigger.cpp(11): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
-c:\users\user\source\repos\sdlwbox2d\trigger.cpp(25): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
-c:\users\user\source\repos\sdlwbox2d\trigger.cpp(28): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
-c:\users\user\source\repos\sdlwbox2d\trigger.cpp(29): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
-  TimerIns.cpp
-  Timer.cpp
-  TextureManager.cpp
-  Texture.cpp
-  SoundManager.cpp
-  SoundEfx.cpp
-  Body.cpp
-  SDL_wrapper.cpp
-  BodyManager.cpp
-  EventHandle.cpp
-  dynBody.cpp
-  demo.cpp
-  Generating Code...
-  demo.vcxproj -> C:\Users\User\source\repos\SDLwBox2d\x64\Debug\demo.exe
+c:\users\serb9_000\source\repos\sdlwbox2d\bodymanager.h(11): error C2146: синтаксическая ошибка: отсутствие ">" перед идентификатором "name"
+c:\users\serb9_000\source\repos\sdlwbox2d\bodymanager.h(11): error C2062: тип "unknown-type" не требуется
+c:\users\serb9_000\source\repos\sdlwbox2d\bodymanager.h(11): error C2238: непредвиденные лексемы перед ";"

@@ -22,11 +22,11 @@ Trigger::Trigger(b2Vec2 vec, std::shared_ptr<b2AABB> rect)
 Trigger::Trigger(int x, int y, int w, int h)
 {
 
-	this->pos =  b2Vec2 ( x, y );
+	this->pos =  b2Vec2 ( static_cast< float32 >( x ), static_cast< float32 >( y ) );
 	rect = std::make_shared< b2AABB>(  );
 
-	rect->lowerBound = b2Vec2( x, y );
-	rect->upperBound = b2Vec2( w, h );
+	rect->lowerBound = b2Vec2( static_cast< float32 >( x ), static_cast< float32 >( y ) );
+	rect->upperBound = b2Vec2( static_cast< float32 >( w ), static_cast< float32 >( h ) );
 }
 
 void Trigger::setName(std::string str)
